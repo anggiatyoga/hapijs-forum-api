@@ -1,5 +1,4 @@
 const ReplyRepository = require('../../Domains/reply/ReplyRepository');
-const pool = require("../database/postgres/pool");
 const NotFoundError = require('../../Commons/exceptions/NotFoundError');
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 
@@ -19,7 +18,7 @@ class ReplyRepositoryPostgres extends ReplyRepository {
             values: [id, threadId, commentId, content, username, false, new Date()],
         };
 
-        const result = await pool.query(query);
+        const result = await this._pool.query(query);
 
         return result.rows[0];
     }

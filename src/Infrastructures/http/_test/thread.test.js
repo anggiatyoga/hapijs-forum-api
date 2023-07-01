@@ -185,7 +185,6 @@ describe('/thread endpoint', () => {
             });
             const response = JSON.parse(threadDetail.payload);
 
-            // expect('ini testnya').toEqual(response);
             expect(threadDetail.statusCode).toEqual(200);
             expect(response.status).toEqual('success');
             expect(response.data.thread.id).toEqual(responseThread.data.addedThread.id);

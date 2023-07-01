@@ -36,6 +36,8 @@ DomainErrorTranslator._directories = {
   'REPLY_USE_CASE.INVALID_ID': new NotFoundError('reply gagal dihapus. Id tidak ditemukan'),
   'REPLY_USE_CASE.MISSING_AUTHENTICATION': new AuthorizationError('tidak diizinkan untuk melakukan aksi ini'),
   'REPLY_REQUEST.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('content harus string'),
+  'LIKES_COMMENT_REQUEST.NOT_CONTAIN_NEEDED_PROPERTY': new InvariantError('tidak dapat menyukai comment dengan invalid thread atau comment'),
+  'LIKES_COMMENT_REQUEST.NOT_MEET_DATA_TYPE_SPECIFICATION': new InvariantError('tipe data yang dimasukkan tidak sesuai'),
 };
 
 module.exports = DomainErrorTranslator;
