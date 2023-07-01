@@ -6,6 +6,7 @@ const ThreadRepository = require('../../../Domains/thread/ThreadRepository');
 const ReplyRepository = require('../../../Domains/reply/ReplyRepository');
 const GetDetailThreadUseCase = require('../GetDetailThreadUseCase');
 const CommentRepository = require('../../../Domains/comment/CommentRepository');
+const LikesCommentRepository = require('../../../Domains/likes/LikesCommentRepository');
 const {mapReplyToResponse} = require("../../../Commons/utils/Mapper");
 
 describe('GetDetailThreadUseCase', () => {
@@ -72,6 +73,7 @@ describe('GetDetailThreadUseCase', () => {
         const mockThreadRepository = new ThreadRepository();
         const mockReplyRepository = new ReplyRepository();
         const mockCommentRepository = new CommentRepository();
+        const mockLikesCommentRepository = new LikesCommentRepository();
 
         /** mocking needed function */
         mockCommentRepository.getCommentsByIdThread = jest.fn(() => ([
@@ -113,12 +115,34 @@ describe('GetDetailThreadUseCase', () => {
             }
         ]));
 
+        mockLikesCommentRepository.getLikesComments = jest.fn(() => ([
+            {
+                id: 'likes_comment-123-111',
+                user_id: 'user-111',
+                comment_id: 'comment-111',
+                thread_id: mockThreadId,
+            },
+            {
+                id: 'likes_comment-123-222',
+                user_id: 'user-222',
+                comment_id: 'comment-111',
+                thread_id: mockThreadId,
+            },
+            {
+                id: 'likes_comment-123-333',
+                user_id: 'user-222',
+                comment_id: 'comment-222',
+                thread_id: mockThreadId,
+            }
+        ]));
+
 
         /** creating use case instance */
         const getDetailThreadUseCase = new GetDetailThreadUseCase({
             threadRepository: mockThreadRepository,
             replyRepository: mockReplyRepository,
             commentRepository: mockCommentRepository,
+            likesCommentRepository: mockLikesCommentRepository,
         });
 
         //Action
@@ -143,6 +167,7 @@ describe('GetDetailThreadUseCase', () => {
                 content: 'content pertama',
                 date: new Date('2021-08-08T08:19:09.775Z'),
                 replies: expectCommentReplies.map(mapReplyToResponse),
+                likeCount: 2,
             },
             {
                 id: 'comment-222',
@@ -150,6 +175,7 @@ describe('GetDetailThreadUseCase', () => {
                 content: '**komentar telah dihapus**',
                 date: new Date('2021-08-08T08:19:09.775Z'),
                 replies: [],
+                likeCount: 1,
             },
         ];
 
@@ -168,10 +194,13 @@ describe('GetDetailThreadUseCase', () => {
         expect(thread.comments).toStrictEqual(expectThreadComments);
         expect(thread.comments[0].replies).toHaveLength(1);
         expect(thread.comments[0].replies).toStrictEqual(expectCommentReplies.map(mapReplyToResponse));
+        expect(thread.comments[0].likeCount).toEqual(2);
         expect(thread.comments[1].replies).toHaveLength(0);
+        expect(thread.comments[1].likeCount).toEqual(1);
 
         expect(mockThreadRepository.getThreadById).toHaveBeenCalledWith(mockThread.id);
         expect(mockCommentRepository.getCommentsByIdThread).toHaveBeenCalledWith(mockThread.id);
         expect(mockReplyRepository.getRepliesByListCommentId).toHaveBeenCalledWith(['comment-111', 'comment-222']);
+        expect(mockLikesCommentRepository.getLikesComments).toHaveBeenCalledWith(mockThreadId, ['comment-111', 'comment-222']);
     });
 })

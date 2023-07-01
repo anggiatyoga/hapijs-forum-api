@@ -4,7 +4,6 @@ const ReplyRepositoryPostgres = require('../ReplyRepositoryPostgres');
 const CommentTableTestHelper = require("../../../../tests/CommentTableTestHelper");
 const Comment = require("../../../Domains/comment/entities/Comment");
 const ThreadTableTestHelper = require("../../../../tests/ThreadTableTestHelper");
-const UserTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const Thread = require("../../../Domains/thread/entities/Thread");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 
@@ -13,7 +12,7 @@ describe('ReplyRepositoryPostgres',  () => {
         await RepliesTableTestHelper.cleanTable();
         await ThreadTableTestHelper.cleanTable();
         await CommentTableTestHelper.cleanTable();
-        await UserTableTestHelper.cleanTable();
+        await UsersTableTestHelper.cleanTable();
     });
 
     afterAll(async () => {
